@@ -29,50 +29,55 @@ public class ReservationController {
         try {
             LocalDate today = LocalDate.now();
 
-            // 1. Validation: Check-in cannot be in the past
+            // 1. Validation: No past dates
             if (req.checkInDate().isBefore(today)) {
                 log.warn("Validation failed: Check-in date {} is in the past", req.checkInDate());
-                return buildErrorResponse(HttpStatus.BAD_REQUEST, 
-                    "Check-in date cannot be in the past.", "/reservations");
+                return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                        "Check-in date cannot be in the past.", "/reservations");
             }
 
-            // 2. Validation: Check-out must be after check-in
+            // 2. Validation: Logical date range
             long days = ChronoUnit.DAYS.between(req.checkInDate(), req.checkOutDate());
             if (days <= 0) {
-                return buildErrorResponse(HttpStatus.BAD_REQUEST, 
-                    "Check-out date must be after check-in date.", "/reservations");
+                return buildErrorResponse(HttpStatus.BAD_REQUEST,
+                        "Check-out date must be after check-in date.", "/reservations");
             }
 
-            // 3. Success Logic
+            // 3. Business Logic: Calculation
             double dailyRate = 60000.0;
-            double extraBedCharge = 10000.0; 
+            double extraBedCharge = 10000.0;
             double total = (dailyRate * days * req.numberOfRooms()) + extraBedCharge;
 
+            // 4. Success Response
+            // Capture the exact moment the reservation is "placed" on the server
+            LocalDateTime reservationPlacedAt = LocalDateTime.now();
+
             ReservationResponse successBody = new ReservationResponse(
-                "BL-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase(),
-                req.hotelName(),
-                total,
-                req.checkInDate(),
-                req.checkOutDate(),
-                "10 Minutes"
+                    "BL-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase(),
+                    req.hotelName(),
+                    total,
+                    req.checkInDate(),
+                    req.checkOutDate(),
+                    reservationPlacedAt
             );
 
+            log.info("Reservation created successfully at {}", reservationPlacedAt);
             return ResponseEntity.status(HttpStatus.CREATED).body(successBody);
 
         } catch (Exception e) {
             log.error("Internal server error: {}", e.getMessage());
-            return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, 
-                "An unexpected error occurred.", "/reservations");
+            return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "An unexpected error occurred.", "/reservations");
         }
     }
 
     private ResponseEntity<ApiError> buildErrorResponse(HttpStatus status, String message, String path) {
         ApiError error = new ApiError(
-            LocalDateTime.now(),
-            status.value(),
-            status.getReasonPhrase(),
-            message,
-            path
+                LocalDateTime.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                message,
+                path
         );
         return new ResponseEntity<>(error, status);
     }
