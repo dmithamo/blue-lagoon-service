@@ -1,0 +1,48 @@
+<header
+  class="sticky top-0 z-50 w-full transition-all duration-300"
+  [class.scrolled-header]="isScrolled()"
+>
+  <div
+    class="brand-tier w-full flex justify-center py-6 bg-background/80 backdrop-blur-md border-b border-white/5 relative z-20"
+    [class.shadow-xs]="isScrolled()"
+  >
+    <a
+      (click)="scrollToTop($event)"
+      routerLink="/"
+      class="group flex items-center select-none tracking-tighter"
+    >
+      <div class="text-2xl font-semibold">
+        <span class="text-accent font-bold">Blue</span>
+        <span class="text-text-primary ml-1">Lagoon</span>
+        <span class="text-accent font-bold">.</span>
+      </div>
+    </a>
+  </div>
+
+  <nav
+    class="w-full flex justify-center items-center gap-12 py-4 bg-background/40 backdrop-blur-sm border-b border-white/5 font-medium transition-all duration-500 ease-in-out relative z-10"
+    [class.-translate-y-full]="isNavHidden()"
+    [class.opacity-0]="isNavHidden()"
+    [class.pointer-events-none]="isNavHidden()"
+  >
+    <div class="flex items-center gap-6">
+      @for (navItem of navItems; track navItem.href) {
+      <a
+        [routerLink]="navItem.href"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [class.text-accent]="rla.isActive"
+        [class.text-text-secondary]="!rla.isActive"
+        class="capitalize flex items-center gap-2 hover:text-accent transition-all duration-300 py-1 group"
+      >
+        <svg
+          [lucideIcon]="navItem.icon"
+          class="w-4 h-4 transition-transform group-hover:scale-110"
+          strokeWidth="2"
+        ></svg>
+        <span>{{ navItem.label }}</span>
+      </a>
+      }
+    </div>
+  </nav>
+</header>

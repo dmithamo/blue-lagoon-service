@@ -1,0 +1,37 @@
+<footer
+  class="w-full py-12 px-6 mt-auto border-t border-gray-100 dark:border-white/5 bg-white/30 dark:bg-black/20 backdrop-blur-sm relative z-10"
+>
+  <div
+    class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 items-center gap-6 text-sm text-text-secondary"
+  >
+    <div
+      class="flex items-center gap-2 justify-center md:justify-start order-2 md:order-1"
+    >
+      <span class="flex items-center gap-1">
+        <svg
+          [lucideIcon]="LucideCopyright"
+          class="w-4 h-4 text-accent"
+        ></svg>
+        {{ currentYear }} Blue Lagoon Hotels & Resorts.
+      </span>
+    </div>
+
+    <div class="flex justify-center order-1 md:order-2">
+      <div class="text-center">
+        <p class="text-xs font-medium text-accent">Premium Hospitality</p>
+      </div>
+    </div>
+
+    <div class="flex justify-center md:justify-end order-3 gap-4">
+      <a href="tel:+254-123-456789" class="flex items-center gap-2 hover:text-accent group">
+        <svg [lucideIcon]="LucidePhone" class="w-3.5 h-3.5"></svg>
+      </a>
+      <a
+        href="mailto:info@bluelagoon.com"
+        class="flex items-center gap-2 hover:text-accent group"
+      >
+        <svg [lucideIcon]="LucideMailOpen" class="w-3.5 h-3.5"></svg>
+      </a>
+    </div>
+  </div>
+</footer>
