@@ -15,8 +15,6 @@ export class Reservations {
   isLoading = signal(false);
   response = signal<any>(null);
   errorMessage = signal('');
-
-  // Get today's date formatted as YYYY-MM-DD for the HTML 'min' attribute
   today = new Date().toISOString().split('T')[0];
 
   booking = {
@@ -25,6 +23,7 @@ export class Reservations {
     checkInDate: '',
     checkOutDate: '',
     numberOfRooms: 1,
+    extraBeds: 0,
     requestTime: new Date().toISOString()
   };
 
@@ -40,8 +39,7 @@ export class Reservations {
       },
       error: (err) => {
         this.isLoading.set(false);
-        const msg = err.error?.message || 'Connection failed.';
-        this.errorMessage.set(msg);
+        this.errorMessage.set(err.error?.message || 'Server connection failed.');
       }
     });
   }
