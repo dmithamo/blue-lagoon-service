@@ -25,6 +25,7 @@
           <div class="flex justify-between">
             <span class="text-gray-400">Total:</span>
             <span class="font-bold">Ksh {{ response().totalAmountPayable | number }}</span>
+            <p>Placed at: <span class="text-gray-300">{{ response().reservationTime | date:'medium' }}</span></p>
           </div>
         </div>
       </div>
