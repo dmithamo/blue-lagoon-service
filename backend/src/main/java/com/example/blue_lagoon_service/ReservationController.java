@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/reservations")
 @CrossOrigin(
-    origins = "http://localhost:4200",
+    origins = "*",
     allowedHeaders = "*",
     methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS }
 )
