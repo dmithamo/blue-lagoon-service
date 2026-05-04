@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public record ReservationResponse(
     String reservationReferenceNumber,
     String hotelName,
+    String customerName,
     double totalAmountPayable,
     LocalDate checkInDate,
     LocalDate checkOutDate,

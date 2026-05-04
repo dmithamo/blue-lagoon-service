@@ -1,35 +1,32 @@
-FROM openjdk:17-slim
-
+# Stage 1: Build the application
+FROM eclipse-temurin:25-jdk-alpine AS builder
 WORKDIR /app
 
-# Copy the gradle wrapper
+# Copy the gradle wrapper and configuration files from the backend directory
+# Note: These paths assume you are building from the root of the monorepo
 COPY backend/gradle ./gradle
 COPY backend/gradlew ./
 COPY backend/gradlew.bat ./
-
-# Copy build files
 COPY backend/build.gradle .
 COPY backend/settings.gradle .
+
+# Copy the source code
 COPY backend/src ./src
 
 # Build the application
+# Using --no-daemon is recommended for Docker builds to save memory
 RUN ./gradlew bootJar --no-daemon
 
-# Extract the jar to run it directly
-RUN java -Djarmode=layertools -jar build/libs/*.jar extract
-
-# Create a new layer for the application
-FROM openjdk:17-slim
-
+# Stage 2: Create the runtime image
+FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
 
-# Copy layers from builder
-COPY --from=0 app/dependencies/ ./
-COPY --from=0 app/spring-boot-loader/ ./
-COPY --from=0 app/snapshot-dependencies/ ./
-COPY --from=0 app/application/ ./
+# Copy the built JAR file from the builder stage
+# We use a wildcard to grab the generated JAR and rename it to app.jar for simplicity
+COPY --from=builder /app/build/libs/*.jar app.jar
 
+# Cloud Run listens on 8080 by default
 EXPOSE 8080
 
-# Use the org.springframework.boot.loader.JarLauncher to start
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+# Run the application using the standard JAR execution
+ENTRYPOINT ["java", "-jar", "app.jar"]

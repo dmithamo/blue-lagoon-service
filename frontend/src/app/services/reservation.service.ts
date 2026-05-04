@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReservationService {
   private http = inject(HttpClient);
@@ -11,5 +11,8 @@ export class ReservationService {
 
   postReservation(data: any): Observable<any> {
     return this.http.post(this.apiUrl, data);
+  }
+  getReservations() {
+    return this.http.get(`${this.apiUrl}`);
   }
 }
