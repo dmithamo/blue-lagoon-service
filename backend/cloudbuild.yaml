@@ -28,7 +28,7 @@ steps:
         "--image",
         "gcr.io/$PROJECT_ID/blue-lagoon-backend:$COMMIT_SHA",
         "--region",
-        "africa-south1",
+        "europe-west1",
         "--platform",
         "managed",
         "--allow-unauthenticated",
@@ -36,3 +36,6 @@ steps:
 
 images:
   - "gcr.io/$PROJECT_ID/blue-lagoon-backend:$COMMIT_SHA"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

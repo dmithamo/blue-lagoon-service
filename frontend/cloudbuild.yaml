@@ -36,3 +36,6 @@ steps:
 
 images:
   - 'gcr.io/$PROJECT_ID/blue-lagoon-frontend:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
